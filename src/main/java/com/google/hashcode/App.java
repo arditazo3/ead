@@ -22,9 +22,9 @@ public class App {
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) throws IOException {
-        bussinesLogic(EXAMPLE_INPUT_FILE_PATH, OUTPUT_DATA_SET_EXAMPLE_TXT);
+//        bussinesLogic(EXAMPLE_INPUT_FILE_PATH, OUTPUT_DATA_SET_EXAMPLE_TXT);
 //        bussinesLogic(LOVE_LANDSCAPES_INPUT_FILE_PATH, LOVE_LANDSCAPES_TXT);
-//        bussinesLogic(MEMORABLE_MOMENTS_INPUT_FILE_PATH, MEMORABLE_MOMENTS_TXT);
+        bussinesLogic(MEMORABLE_MOMENTS_INPUT_FILE_PATH, MEMORABLE_MOMENTS_TXT);
 //        bussinesLogic(PET_PICTURES_INPUT_FILE_PATH, PET_PICTURES_DATA_SET_MEDIUM_TXT);
 //        bussinesLogic(SHINY_SELFIE_PICTURES_INPUT_FILE_PATH, SHINY_SELFIE_DATA_SET_MEDIUM_TXT);
     }
