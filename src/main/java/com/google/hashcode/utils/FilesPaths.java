@@ -6,16 +6,18 @@ package com.google.hashcode.utils;
  * @author Ex Armundia Devs
  */
 public abstract class FilesPaths {
-    public static final String EXAMPLE_INPUT_FILE_PATH = "inputDataSets/example.in";
-    public static final String SMALL_INPUT_FILE_PATH = "inputDataSets/small.in";
-    public static final String MEDIUM_INPUT_FILE_PATH = "inputDataSets/medium.in";
-    public static final String BIG_INPUT_FILE_PATH = "inputDataSets/big.in";
+    public static final String EXAMPLE_INPUT_FILE_PATH = "inputDataSets/a_example.txt";
+    public static final String LOVE_LANDSCAPES_INPUT_FILE_PATH = "inputDataSets/b_lovely_landscapes.txt";
+    public static final String MEMORABLE_MOMENTS_INPUT_FILE_PATH = "inputDataSets/c_memorable_moments.txt";
+    public static final String PET_PICTURES_INPUT_FILE_PATH = "inputDataSets/d_pet_pictures.txt";
+    public static final String SHINY_SELFIE_PICTURES_INPUT_FILE_PATH = "inputDataSets/e_shiny_selfies.txt";
 
 
-    public static final String OUTPUT_DATA_SET_EXAMPLE_TXT = "outputDataSet/example.txt";
-    public static final String OUTPUT_DATA_SET_SMALL_TXT = "outputDataSet/small.txt";
-    public static final String OUTPUT_DATA_SET_BIG_TXT = "outputDataSet/big.txt";
-    public static final String OUTPUT_DATA_SET_MEDIUM_TXT = "outputDataSet/medium.txt";
+    public static final String OUTPUT_DATA_SET_EXAMPLE_TXT = "outputDataSet/out_example.txt";
+    public static final String LOVE_LANDSCAPES_TXT = "outputDataSet/out_lovely_landscapes.txt";
+    public static final String MEMORABLE_MOMENTS_TXT = "outputDataSet/out_memorable_moments.txt";
+    public static final String PET_PICTURES_DATA_SET_MEDIUM_TXT = "outputDataSet/out_pet_pictures.txt";
+    public static final String SHINY_SELFIE_DATA_SET_MEDIUM_TXT = "outputDataSet/out_shiny_selfies.txt";
 
     private FilesPaths() {
     }

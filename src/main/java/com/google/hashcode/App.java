@@ -23,10 +23,10 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         bussinesLogic(EXAMPLE_INPUT_FILE_PATH, OUTPUT_DATA_SET_EXAMPLE_TXT);
-        bussinesLogic(SMALL_INPUT_FILE_PATH, OUTPUT_DATA_SET_SMALL_TXT);
-        bussinesLogic(MEDIUM_INPUT_FILE_PATH, OUTPUT_DATA_SET_MEDIUM_TXT);
-        //takes to much time ~ 20 hours using intel -I5
-        //bussinesLogic(BIG_INPUT_FILE_PATH, OUTPUT_DATA_SET_BIG_TXT);
+        bussinesLogic(LOVE_LANDSCAPES_INPUT_FILE_PATH, LOVE_LANDSCAPES_TXT);
+        bussinesLogic(MEMORABLE_MOMENTS_INPUT_FILE_PATH, MEMORABLE_MOMENTS_TXT);
+        bussinesLogic(PET_PICTURES_INPUT_FILE_PATH, PET_PICTURES_DATA_SET_MEDIUM_TXT);
+        bussinesLogic(SHINY_SELFIE_PICTURES_INPUT_FILE_PATH, SHINY_SELFIE_DATA_SET_MEDIUM_TXT);
     }
 
     /**
