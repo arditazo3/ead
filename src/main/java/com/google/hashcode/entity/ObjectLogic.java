@@ -1,9 +1,7 @@
 package com.google.hashcode.entity;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Represents an immutable pizza
@@ -13,88 +11,44 @@ import java.util.Optional;
 public class ObjectLogic {
 
     private final File input;
-    private final Instruction instruction;
-    private List<Cell> cells;
+    private Set<Photo> photos;
 
-    public ObjectLogic(File input, List<Cell> cells, Instruction instruction) {
+    public ObjectLogic(File input, Set<Photo> photos) {
         this.input = input;
-        this.cells = cells;
-        this.instruction = instruction;
+        this.photos = photos;
     }
 
     public File getInput() {
         return input;
     }
 
-    public List<Cell> getCells() {
-        return cells;
+    public Set<Photo> getPhotos() {
+        return photos;
     }
 
-    public void setCells(List<Cell> cells) {
-        this.cells = cells;
+    public void setPhotos(Set<Photo> photos) {
+        this.photos = photos;
     }
 
-    /**
-     * Coordinates are like in a 2D array
-     *
-     * @param y - row number, 0..max row number
-     * @param x - column number,0..max column number
-     * @return a pizza cell with specified coordinated
-     */
-    public Optional<Cell> getCell(int y, int x) {
-        return cells.stream().filter(cell -> cell.x == x && cell.y == y).findFirst();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ObjectLogic that = (ObjectLogic) o;
+        return Objects.equals(input, that.input) &&
+                Objects.equals(photos, that.photos);
     }
 
-    public Instruction getInstruction() {
-        return instruction;
+    @Override
+    public int hashCode() {
+        return Objects.hash(input, photos);
     }
 
     @Override
     public String toString() {
-        return input.toString()
-                + ("\n" + instruction.toString()
-                + "\n" + outputCellsArray()).trim();
+        return "ObjectLogic{" +
+                "input=" + input +
+                ", photos=" + photos +
+                '}';
     }
-
-    /**
-     * Indicates does this pizza contains each slice's cell
-     *
-     * @param slice given slice
-     * @return true if the pizza contains the slice
-     */
-    public boolean containsCells(ContainCells slice) {
-        return slice.cells.stream().allMatch(this.cells::contains);
-    }
-
-    private String outputCellsArray() {
-        if (!cells.isEmpty() && cells.size() < 100) {
-            StringBuilder stringBuilder = new StringBuilder();
-            int columnsCount = cells.stream().max(Comparator.comparingInt(Cell::getX)).get().getX();
-            int rowsCount = cells.stream().max(Comparator.comparingInt(Cell::getY)).get().getY();
-            //output columns coordinates
-            stringBuilder.append(" ");
-            for (int column = 0; column < columnsCount + 1; column++) {
-                stringBuilder.append(" ").append(column);
-            }
-            stringBuilder.append("\n");
-            for (int row = 0; row < rowsCount + 1; row++) {
-                //output rows coordinates
-                stringBuilder.append(row).append(" ");
-                for (int column = 0; column < columnsCount + 1; column++) {
-                    if (this.getCell(row, column).isPresent()) {
-                        stringBuilder.append(this.getCell(row, column).get().toString()).append(" ");
-                    } else {
-                        stringBuilder.append(" ").append(" ");
-                    }
-                }
-                stringBuilder.append("\n");
-            }
-            return stringBuilder.toString();
-        } else {
-            return "pizza size is:" + cells.size();
-        }
-
-    }
-
-
 }

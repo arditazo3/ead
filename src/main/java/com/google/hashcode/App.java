@@ -1,21 +1,21 @@
 package com.google.hashcode;
 
-import com.google.hashcode.entity.ObjectLogic;
-import com.google.hashcode.entity.ContainCells;
-import com.google.hashcode.entity.Step;
+import com.google.hashcode.entity.*;
 import com.google.hashcode.utils.IoUtils;
 import com.google.hashcode.utils.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
+import static com.google.hashcode.entity.PhotoContainer.parsePhotoLogic;
+import static com.google.hashcode.entity.Slide.getSlidesWithVerticalPhotos;
+import static com.google.hashcode.entity.SlideShow.getSlidesOrdered;
 import static com.google.hashcode.utils.FilesPaths.*;
-import static com.google.hashcode.utils.ContainerCellsMethods.*;
 
 
 public class App {
@@ -23,10 +23,10 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         bussinesLogic(EXAMPLE_INPUT_FILE_PATH, OUTPUT_DATA_SET_EXAMPLE_TXT);
-        bussinesLogic(LOVE_LANDSCAPES_INPUT_FILE_PATH, LOVE_LANDSCAPES_TXT);
-        bussinesLogic(MEMORABLE_MOMENTS_INPUT_FILE_PATH, MEMORABLE_MOMENTS_TXT);
-        bussinesLogic(PET_PICTURES_INPUT_FILE_PATH, PET_PICTURES_DATA_SET_MEDIUM_TXT);
-        bussinesLogic(SHINY_SELFIE_PICTURES_INPUT_FILE_PATH, SHINY_SELFIE_DATA_SET_MEDIUM_TXT);
+//        bussinesLogic(LOVE_LANDSCAPES_INPUT_FILE_PATH, LOVE_LANDSCAPES_TXT);
+//        bussinesLogic(MEMORABLE_MOMENTS_INPUT_FILE_PATH, MEMORABLE_MOMENTS_TXT);
+//        bussinesLogic(PET_PICTURES_INPUT_FILE_PATH, PET_PICTURES_DATA_SET_MEDIUM_TXT);
+//        bussinesLogic(SHINY_SELFIE_PICTURES_INPUT_FILE_PATH, SHINY_SELFIE_DATA_SET_MEDIUM_TXT);
     }
 
     /**
@@ -38,29 +38,34 @@ public class App {
      */
     public static void bussinesLogic(String inputFile, String outputFile) throws IOException {
         Profiler profiler = new Profiler();
-        List<ContainCells> startPositions;
-        List<ContainCells> output = new ArrayList<>();
-        ObjectLogic pizza = new ObjectLogic(new File(inputFile), IoUtils.parseObjectLogic(inputFile), IoUtils.parseInstructions(inputFile));
-        //get start positions
-        startPositions = cutAllStartPositions(pizza);
-        //get All steps
-        Map<ContainCells, List<Step>> availableSteps = getAvailableSteps(pizza, startPositions, output);
-        while (!availableSteps.values().stream().allMatch(List::isEmpty)) {
-            Step step = selectStep(availableSteps);
-            performStep(pizza, step, startPositions, output);
-            availableSteps = getAvailableSteps(pizza, startPositions, output);
-            LOGGER.debug("OUTPUT AFTER A STEP: "
-                    + "\n " + output);
-            LOGGER.debug("start positions cells number: " + startPositions.stream()
-                    .map(slice -> slice.cells.size())
-                    .reduce(0, (integer, integer2) -> integer + integer2)
-            );
-        }
-        IoUtils.writeToFile(outputFile, IoUtils.parseContainCells(output));
+
+        PhotoContainer photoContainer = new PhotoContainer(parsePhotoLogic(inputFile));
+
+        List<Photo> verticalPhotos = photoContainer.getPhotos()
+                .stream()
+                .filter(photo -> photo.getPosition().toString().equals(Position.VERTICAL.toString()))
+                .collect(Collectors.toList());
+
+        List<Photo> horizontalPhotos = photoContainer.getPhotos()
+                .stream()
+                .filter(photo -> photo.getPosition().toString().equals(Position.HORIZONTAL.toString()))
+                .collect(Collectors.toList());
+
+        List<Slide> slideWithVerticalPhotos = getSlidesWithVerticalPhotos(verticalPhotos);
+
+        List<Slide> slideWithHorizontalPhotos = horizontalPhotos.stream()
+                .map(p -> new Slide(new ArrayList<>(Arrays.asList(p)), p.getTags()))
+                .collect(Collectors.toList());
+
+        List<Slide> allSlides = new ArrayList<>();
+        allSlides.addAll(slideWithVerticalPhotos);
+        allSlides.addAll(slideWithHorizontalPhotos);
+
+        allSlides = getSlidesOrdered(allSlides);
+
+        IoUtils.writeToFile(outputFile, IoUtils.parseContainSlides(allSlides));
+
         LOGGER.info("FINISHED for " + inputFile + "!!!!!");
-        LOGGER.info("sliced cells number: " + output.stream()
-                .map(slice -> slice.cells.size())
-                .reduce(0, (integer, integer2) -> integer + integer2));
         LOGGER.info(profiler.measure(inputFile + " execution time: "));
     }
 

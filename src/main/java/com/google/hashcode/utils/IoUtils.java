@@ -1,9 +1,6 @@
 package com.google.hashcode.utils;
 
-import com.google.hashcode.entity.Cell;
-import com.google.hashcode.entity.Ingredient;
-import com.google.hashcode.entity.ContainCells;
-import com.google.hashcode.entity.Instruction;
+import com.google.hashcode.entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,10 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Formatter;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Ex Armundia Devs
@@ -30,46 +24,44 @@ public class IoUtils {
      * @return 2d array representing a pizza
      * @throws IOException parsing fail
      */
-    public static List<Cell> parseObjectLogic(String file) throws IOException {
+    public static List<Photo> parseObjectLogic(String file) throws IOException {
         try (FileReader fileReader = new FileReader(file)) {
             BufferedReader br = new BufferedReader(fileReader);
             //skip a line with slice instructions
             br.readLine();
-            //declare a pizza cells array
-            List<Cell> cells = new ArrayList<>();
-            int row = 0;
+            //declare cells array
+            List<Photo> photos = new ArrayList<>();
+            Long idPhoto = 1L;
             String fileLine;
             while ((fileLine = br.readLine()) != null) {
-                for (int column = 0; column < fileLine.length(); column++) {
-                    Character literal = fileLine.charAt(column);
-                    if (literal.toString().equals(Ingredient.TOMATO.toString())) {
-                        cells.add(new Cell(row, column, Ingredient.TOMATO));
-                    } else if (literal.toString().equals(Ingredient.MUSHROOM.toString())) {
-                        cells.add(new Cell(row, column, Ingredient.MUSHROOM));
+
+                    String[] elementsPhoto = fileLine.split(" ");
+
+                    String positionString = elementsPhoto[0];
+                    Position position = null;
+                    if (positionString.equals(Position.HORIZONTAL.toString())) {
+                        position = Position.HORIZONTAL;
+                    } else {
+                        position = Position.VERTICAL;
                     }
-                }
-                row++;
+
+                    Set<String> tags = new HashSet<>();
+                    String numberTagsString = elementsPhoto[1];
+                    Integer numberTagsParse = Integer.parseInt(numberTagsString);
+                    for (int i = 2; i < numberTagsParse; i++) {
+                        String tag = elementsPhoto[i];
+
+                        tags.add(tag);
+                    }
+
+                    Photo photo = new Photo(idPhoto, tags, position);
+
+                idPhoto++;
             }
-            return cells;
+            return photos;
         }
     }
 
-    /**
-     * Produces SliceInstructions based on given input data set
-     *
-     * @param file input data set
-     * @return slice instructions
-     * @throws IOException file reading error
-     */
-    public static Instruction parseInstructions(String file) throws IOException {
-        try (FileReader fileReader = new FileReader(file)) {
-            BufferedReader br = new BufferedReader(fileReader);
-            String[] headerTokens = br.readLine().split(" ");
-            int minNumberOfIngredientPerSlice = Integer.parseInt(headerTokens[2]);
-            int maxNumberOfCellsPerSlice = Integer.parseInt(headerTokens[3]);
-            return new Instruction(minNumberOfIngredientPerSlice, maxNumberOfCellsPerSlice);
-        }
-    }
 
     /**
      * Formats data from list of slices to the required output format
@@ -77,21 +69,18 @@ public class IoUtils {
      * @param list inner representation of pizza
      * @return String that contains output data
      */
-    public static String parseContainCells(List<ContainCells> list) {
-        Comparator<Cell> cellComparator = (Cell c1, Cell c2) -> {
-            if (c1.x != c2.x) {
-                return Integer.compare(c1.x, c2.x);
-            } else
-                return Integer.compare(c1.y, c2.y);
-        };
+    public static String parseContainSlides(List<Slide> list) {
+
         StringBuilder sb = new StringBuilder();
         Formatter textFormatter = new Formatter(sb);
         textFormatter.format("%d%n", list.size());
-        Cell min, max;
-        for (ContainCells slice : list) {
-            min = slice.cells.stream().min(cellComparator).get();
-            max = slice.cells.stream().max(cellComparator).get();
-            textFormatter.format("%d %d %d %d%n", min.y, min.x, max.y, max.x);
+        for (Slide slide : list) {
+
+            if (slide.getPhotos().size() == 2) {
+                textFormatter.format("%d %d%n", slide.getPhotos().get(0).getIdPhoto(), slide.getPhotos().get(1).getIdPhoto());
+            } else {
+                textFormatter.format("%d%n", slide.getPhotos().get(0).getIdPhoto());
+            }
         }
         textFormatter.close();
         return sb.toString().trim();
