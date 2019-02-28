@@ -33,7 +33,7 @@ public class PhotoContainer {
             br.readLine();
             //declare cells array
             List<Photo> photos = new ArrayList<>();
-            Long idPhoto = 1L;
+            Long idPhoto = 0L;
             String fileLine;
             while ((fileLine = br.readLine()) != null) {
 
@@ -57,6 +57,8 @@ public class PhotoContainer {
                 }
 
                 Photo photo = new Photo(idPhoto, tags, position);
+
+                photos.add(photo);
 
                 idPhoto++;
             }
