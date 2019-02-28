@@ -50,7 +50,7 @@ public class PhotoContainer {
                 Set<String> tags = new HashSet<>();
                 String numberTagsString = elementsPhoto[1];
                 Integer numberTagsParse = Integer.parseInt(numberTagsString);
-                for (int i = 2; i < numberTagsParse; i++) {
+                for (int i = 2; i < elementsPhoto.length; i++) {
                     String tag = elementsPhoto[i];
 
                     tags.add(tag);
